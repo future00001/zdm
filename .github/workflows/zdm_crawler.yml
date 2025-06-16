@@ -40,7 +40,7 @@ jobs:
         emailPort: 465
         emailAccount: ${{secrets.emailAccount}}
         emailPassword: ${{secrets.emailPassword}}
-        spt: ${{secrets.spt}}
+        spt: ${{secrets.SPT}}
         detail: false
       run: java -jar zdm.jar
 
