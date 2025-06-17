@@ -39,17 +39,30 @@ jobs:
         emailAccount: ${{secrets.emailAccount}}
         # 接收优惠信息的邮箱的授权码 为空代表不进行邮箱推送
         emailPassword: ${{secrets.emailPassword}}
+        
         # WxPusher极简推送模式的spt 为空代表不进行Wx推送
+        # This is likely your WxPusher UID or a user-specific topic token
         spt: ${{secrets.SPT}}
+        
+        # ADDED: WxPusher Application Token
+        # You need to create a GitHub Secret named WX_PUSHER_APP_TOKEN (or similar)
+        # and store your WxPusher AppToken value in it.
+        # The Java application needs this to authenticate with WxPusher.
+        # Common environment variable names for this are WX_PUSHER_APP_TOKEN, wxPusherAppToken, or appToken.
+        # Check your Java application's documentation or code if this specific name doesn't work.
+        WX_PUSHER_APP_TOKEN: ${{secrets.WX_PUSHER_APP_TOKEN}} # Ensure this secret exists in your repo
+
         # true:下载阶段打印出详细信息(待推送的优惠信息列表,过滤时使用的黑白词),因文本量比较大,在调通项目后可以改为false
         detail: false
       run: java -jar zdm.jar
     #保存已推送和暂未推送的优惠信息
     - name: git add files
       run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
         git add database.db
     - name: commit & push
-      uses: actions-go/push@master
+      uses: actions-go/push@master # Consider using a more maintained action like stefanzweifel/git-auto-commit-action
       with:
         author-email: 'actions@github.com'
         author-name: 'GitHub Actions'
